@@ -8,11 +8,6 @@ INNER JOIN revenue
 ON specs.movie_id = revenue.movie_id
 ORDER BY worldwide_gross;
 
-SELECT film_title, release_year, worldwide_gross
-FROM specs
-FULL JOIN revenue
-ON specs.movie_id = revenue.movie_id
-ORDER BY worldwide_gross;
 --answer: "Semi-Tough"	1977	37187139
 
 --2. What year has the highest average imdb rating?
@@ -23,23 +18,9 @@ FROM specs
 GROUP BY release_year, imdb_rating
 ORDER BY imdb_rating DESC;
 
-SELECT specs.release_year, AVG(rating.imdb_rating)
-FROM specs
-	INNER JOIN rating
-	USING (movie_id)
-GROUP BY release_year, imdb_rating
-ORDER BY imdb_rating DESC;
 --answer: 2008
 
 --3. What is the highest grossing G-rated movie? Which company distributed it?
-SELECT film_title, mpaa_rating, worldwide_gross, company_name
-FROM specs
-	INNER JOIN revenue
-	ON specs.movie_id = revenue.movie_id
-	INNER JOIN distributors
-	ON specs.domestic_distributor_id = distributors.distributor_id
-WHERE mpaa_rating = 'G'
-ORDER BY worldwide_gross DESC;
 
 SELECT film_title, mpaa_rating, worldwide_gross, company_name
 FROM specs
@@ -121,3 +102,15 @@ ORDER BY rating.imdb_rating DESC;
 --answer: "Dirty Dancing"
 
 --7. Which have a higher average rating, movies which are over two hours long or movies which are under two hours?
+
+SELECT AVG(imdb_rating),
+CASE
+	WHEN length_in_min>= 120 THEN 'over 2 hrs long'
+	WHEN length_in_min< 120 THEN 'under 2 hrs long'
+END
+FROM rating
+	INNER JOIN specs
+	ON rating.movie_id = specs.movie_id
+GROUP BY 2;
+--answer: movies over 2 hrs have a higher avg rating
+
