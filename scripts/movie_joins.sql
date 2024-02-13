@@ -107,10 +107,10 @@ SELECT AVG(imdb_rating),
 CASE
 	WHEN length_in_min>= 120 THEN 'over 2 hrs long'
 	WHEN length_in_min< 120 THEN 'under 2 hrs long'
-END
+END AS length_comparison
 FROM rating
 	INNER JOIN specs
 	ON rating.movie_id = specs.movie_id
-GROUP BY 2;
+GROUP BY length_comparison;
 --answer: movies over 2 hrs have a higher avg rating
 
